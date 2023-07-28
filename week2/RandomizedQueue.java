@@ -6,7 +6,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int size = 0;
 
     public RandomizedQueue() {
-        arr = (Item[]) new Object[1];
+        arr = (Item[]) new Object[2];
     }
 
     public boolean isEmpty() {
@@ -18,28 +18,40 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void enqueue(Item item) {
-        if (item == null){
+        if (item == null) {
             throw new IllegalArgumentException("Item cannot be null");
         }
 
-        if (lastIndex == arr.length) {
+        if (size == arr.length) {
             resize(2 * arr.length);
         }
         arr[size++] = item;
     }
 
     public Item dequeue() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
+
+        if (size > 0 && size <= arr.length / 4) {
+            resize(arr.length / 2);
+        }
+
+        int randomIndex = getRandomIndex();
+        Item randomItem = arr[randomIndex];
+        arr[randomIndex] = arr[size--];
+        arr[size] = null;
+        return randomItem;
     }
 
     public Item sample() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
 
-        return arr[getRandomIndex()];
+        int randomIndex = getRandomIndex();
+        Item randomItem = arr[randomIndex];
+        return randomItem;
     }
 
     public Iterator<Item> iterator() {
