@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] arr;
-    private int lastIndex = 0;
+    private int size = 0;
 
     public RandomizedQueue() {
         arr = (Item[]) new Object[1];
@@ -18,17 +18,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public void enqueue(Item item) {
+        if (item == null){
+            throw new IllegalArgumentException("Item cannot be null");
+        }
+
         if (lastIndex == arr.length) {
             resize(2 * arr.length);
         }
-        arr[lastIndex++] = item;
+        arr[size++] = item;
     }
 
     public Item dequeue() {
-
+        if (isEmpty()){
+            throw new NoSuchElementException("Queue is empty");
+        }
     }
 
     public Item sample() {
+        if (isEmpty()){
+            throw new NoSuchElementException("Queue is empty");
+        }
+
         return arr[getRandomIndex()];
     }
 
