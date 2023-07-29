@@ -1,4 +1,5 @@
 import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdIn;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
@@ -86,7 +87,71 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
+        StdOut.println("Test Randomized queue");
+        StdOut.println("");
 
+        RandomizedQueue randQueue = new RandomizedQueue<String>();
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+
+        StdOut.println("Add 'K'");
+        randQueue.enqueue("B");
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Add 'A'");
+        randQueue.enqueue("A");
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Add 'B'");
+        randQueue.enqueue("B");
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Add 'O'");
+        randQueue.enqueue("O");
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Add 'M'");
+        randQueue.enqueue("M");
+        StdOut.println("Size: " + randQueue.size());
+
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+
+        StdOut.println("");
+
+        StdOut.println("Print randomly using an iterator:");
+        for (String s : randQueue)
+            StdOut.print(s);
+
+        StdOut.println("Print randomly using an iterator:");
+        for (String s : randQueue)
+            StdOut.print(s);
+
+        StdOut.println("Print randomly using an iterator:");
+        for (String s : randQueue)
+            StdOut.print(s);
+
+        StdOut.println("");
+
+        StdOut.println("Sample random items:");
+        StdOut.println("Sample 1: " + randQueue.sample());
+        StdOut.println("Sample 2: " + randQueue.sample());
+        StdOut.println("Sample 3: " + randQueue.sample());
+        StdOut.println("Sample 4: " + randQueue.sample());
+        StdOut.println("Sample 5: " + randQueue.sample());
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+        StdOut.println("Size: " + randQueue.size());
+
+        StdOut.println("Remove random items:");
+        StdOut.println("Item 1: " + randQueue.dequeue());
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+        StdOut.println("Item 2: " + randQueue.dequeue());
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+        StdOut.println("Item 3: " + randQueue.dequeue());
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+        StdOut.println("Item 4: " + randQueue.dequeue());
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Is empty: " + randQueue.isEmpty());
+        StdOut.println("Item 5: " + randQueue.dequeue());
+        StdOut.println("Size: " + randQueue.size());
+        StdOut.println("Is empty: " + randQueue.isEmpty());
     }
 
     private void resize(int capacity) {

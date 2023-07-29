@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdOut;
+
 public class Deque<Item> implements Iterable<Item> {
 
     private Node first = null;
@@ -110,7 +112,65 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
+        StdOut.println("Test Double-ended queue");
+        StdOut.println("");
 
+        Deque<String> deque = new Deque<String>();
+        StdOut.println("Is empty: " + deque.isEmpty());
+
+        StdOut.println("Add first 'B'");
+        deque.addFirst("B");
+        StdOut.println("Size: " + deque.size());
+        StdOut.println("Add first 'A'");
+        deque.addFirst("A");
+        StdOut.println("Size: " + deque.size());
+        StdOut.println("Add last 'O'");
+        deque.addLast("O");
+        StdOut.println("Size: " + deque.size());
+        StdOut.println("Add first 'K'");
+        deque.addFirst("K");
+        StdOut.println("Size: " + deque.size());
+        StdOut.println("Add last 'M'");
+        deque.addLast("M");
+        StdOut.println("Size: " + deque.size());
+
+        StdOut.println("Is empty: " + deque.isEmpty());
+
+        StdOut.println("");
+
+        StdOut.println("Print all using an iterator:");
+        for (String s : deque)
+            StdOut.print(s);
+
+        StdOut.println("");
+
+        StdOut.println("Remove two first items:");
+        String str;
+        str = deque.removeFirst();
+        StdOut.println(str);
+        str = deque.removeFirst();
+        StdOut.println(str);
+        StdOut.println("Size: " + deque.size());
+
+        StdOut.println("Remove two last items:");
+        str = deque.removeLast();
+        StdOut.println(str);
+        str = deque.removeLast();
+        StdOut.println(str);
+        StdOut.println("Size: " + deque.size());
+
+        StdOut.println("");
+
+        StdOut.println("Print the rest using an iterator:");
+        for (String s : deque)
+            StdOut.print(s);
+
+        StdOut.println("");
+
+        StdOut.println("Remove all:");
+        str = deque.removeFirst();
+        StdOut.println("Size: " + deque.size());
+        StdOut.println("Is empty: " + deque.isEmpty());
     }
 
 }
