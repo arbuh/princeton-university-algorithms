@@ -5,6 +5,33 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] arr;
     private int size = 0;
 
+    private class RandomArrayIterator implements Iterator<Item> {
+        private Item[] arrCopy;
+        private int i;
+
+        private RandomArrayIterator(){
+            arrCopy = (Item[]) new Object[size];
+            arrCopy = System.arraycopy(arr, 0, arrCopy, 0, size);
+            i = size;
+        }
+
+        public Boolean hasNext(){
+            return i > 0;
+        }
+
+        public void remove(){
+            throw new UnsupportedOperationException();
+        }
+
+        public Item next(){
+            int randomIndex = StdRandom.uniformInt(i);
+            Item randomItem = arrCopy[randomIndex];
+            arrCopy[randomIndex] = arrCopy[--i];
+            arrCopy[i] = null;
+            return item;
+        }
+    }
+
     public RandomizedQueue() {
         arr = (Item[]) new Object[2];
     }
@@ -39,7 +66,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         int randomIndex = getRandomIndex();
         Item randomItem = arr[randomIndex];
-        arr[randomIndex] = arr[size--];
+        arr[randomIndex] = arr[--size];
         arr[size] = null;
         return randomItem;
     }
@@ -55,7 +82,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public Iterator<Item> iterator() {
-
+        return new RandomArrayIterator();
     }
 
     public static void main(String[] args) {
@@ -70,6 +97,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private int getRandomIndex() {
-        return StdRandom.uniformInt(lastIndex + 1);
+        return StdRandom.uniformInt(size);
     }
 }
