@@ -1,5 +1,7 @@
 import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
@@ -12,11 +14,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         private RandomArrayIterator(){
             arrCopy = (Item[]) new Object[size];
-            arrCopy = System.arraycopy(arr, 0, arrCopy, 0, size);
-            i = size;
+            for (i = 0; i < size; i++)
+                arrCopy[i] = arr[i];
         }
 
-        public Boolean hasNext(){
+        public boolean hasNext(){
             return i > 0;
         }
 
@@ -29,7 +31,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             Item randomItem = arrCopy[randomIndex];
             arrCopy[randomIndex] = arrCopy[--i];
             arrCopy[i] = null;
-            return item;
+            return randomItem;
         }
     }
 
@@ -90,7 +92,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         StdOut.println("Test Randomized queue");
         StdOut.println("");
 
-        RandomizedQueue randQueue = new RandomizedQueue<String>();
+        RandomizedQueue<String> randQueue = new RandomizedQueue<String>();
         StdOut.println("Is empty: " + randQueue.isEmpty());
 
         StdOut.println("Add 'K'");
@@ -156,7 +158,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < size; i++)
             copy[i] = arr[i];
         arr = copy;
     }

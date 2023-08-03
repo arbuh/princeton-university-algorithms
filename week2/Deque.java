@@ -1,4 +1,6 @@
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
 
@@ -15,16 +17,16 @@ public class Deque<Item> implements Iterable<Item> {
     private class ListIterator implements Iterator<Item> {
         private Node current = first;
 
-        public Boolean hasNext(){
+        public boolean hasNext() {
             return current != null;
         }
 
-        public void remove(){
+        public void remove() {
             throw new UnsupportedOperationException();
         }
 
-        public Item next(){
-            if (current == null){
+        public Item next() {
+            if (current == null) {
                 throw new NoSuchElementException();
             }
 
@@ -34,7 +36,8 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    public Deque() {}
+    public Deque() {
+    }
 
     public boolean isEmpty() {
         return size == 0;
@@ -45,7 +48,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void addFirst(Item item) {
-        if (item == null){
+        if (item == null) {
             throw new IllegalArgumentException("Item cannot be null");
         }
 
@@ -54,8 +57,8 @@ public class Deque<Item> implements Iterable<Item> {
         first.item = item;
         first.next = oldFirst;
 
-        if (isEmpty()){
-            first = last;
+        if (isEmpty()) {
+            last = first;
         } else {
             oldFirst.prev = first;
         }
@@ -64,7 +67,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public void addLast(Item item) {
-        if (item == null){
+        if (item == null) {
             throw new IllegalArgumentException("Item cannot be null");
         }
 
@@ -73,8 +76,8 @@ public class Deque<Item> implements Iterable<Item> {
         last.item = item;
         last.prev = oldLast;
 
-        if (isEmpty()){
-            last = first;
+        if (isEmpty()) {
+            first = last;
         } else {
             oldLast.next = last;
         }
@@ -83,25 +86,33 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public Item removeFirst() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
 
         Item item = first.item;
-        first = first.next;
-        first.prev = null;
+
+        if (first.next != null){
+            first = first.next;
+            first.prev = null;
+        }
+
         size--;
         return item;
     }
 
     public Item removeLast() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new NoSuchElementException("Queue is empty");
         }
 
         Item item = last.item;
-        last = last.prev;
-        last.next = null;
+
+        if (last.prev != null){
+            last = last.prev;
+            last.next = null;
+        }
+
         size--;
         return item;
 
@@ -170,6 +181,24 @@ public class Deque<Item> implements Iterable<Item> {
         StdOut.println("Remove all:");
         str = deque.removeFirst();
         StdOut.println("Size: " + deque.size());
+        StdOut.println("Is empty: " + deque.isEmpty());
+
+        StdOut.println("");
+
+        StdOut.println("Add last '0'");
+        deque.addLast("0");
+        StdOut.println("Is empty: " + deque.isEmpty());
+        StdOut.println("Remove first");
+        str = deque.removeFirst();
+        StdOut.println("Is empty: " + deque.isEmpty());
+
+        StdOut.println("");
+
+        StdOut.println("Add last '0'");
+        deque.addLast("0");
+        StdOut.println("Is empty: " + deque.isEmpty());
+        StdOut.println("Remove last");
+        str = deque.removeLast();
         StdOut.println("Is empty: " + deque.isEmpty());
     }
 

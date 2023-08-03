@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Iterator;
 
 public class Permutation {
     public static void main(String[] args) {
@@ -8,7 +9,7 @@ public class Permutation {
             throw new IllegalArgumentException("k cannot be smaller than zero");
         }
 
-        RandomizedQueue randQueue = new RandomizedQueue<String>();
+        RandomizedQueue<String> randQueue = new RandomizedQueue<String>();
 
         while (!StdIn.isEmpty() && k > 0) {
             String str = StdIn.readString();
