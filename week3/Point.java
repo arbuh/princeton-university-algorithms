@@ -2,14 +2,14 @@ import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Point implements Comparable<Point> {
-    private final int x;     // x-coordinate of this point
-    private final int y;     // y-coordinate of this point
+    private final int x; // x-coordinate of this point
+    private final int y; // y-coordinate of this point
 
     /**
      * Initializes a new point.
      *
-     * @param  x the <em>x</em>-coordinate of the point
-     * @param  y the <em>y</em>-coordinate of the point
+     * @param x the <em>x</em>-coordinate of the point
+     * @param y the <em>y</em>-coordinate of the point
      */
     public Point(int x, int y) {
         /* DO NOT MODIFY */
@@ -26,8 +26,8 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Draws the line segment between this point and the specified point
-     * to standard draw.
+     * Draws the line segment between this point and the specified point to standard
+     * draw.
      *
      * @param that the other point
      */
@@ -63,44 +63,40 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Compares two points by y-coordinate, breaking ties by x-coordinate.
-     * Formally, the invoking point (x0, y0) is less than the argument point
-     * (x1, y1) if and only if either y0 < y1 or if y0 = y1 and x0 < x1.
+     * Compares two points by y-coordinate, breaking ties by x-coordinate. Formally,
+     * the invoking point (x0, y0) is less than the argument point (x1, y1) if and
+     * only if either y0 < y1 or if y0 = y1 and x0 < x1.
      *
-     * @param  that the other point
-     * @return the value <tt>0</tt> if this point is equal to the argument
-     *         point (x0 = x1 and y0 = y1);
-     *         a negative integer if this point is less than the argument
-     *         point; and a positive integer if this point is greater than the
-     *         argument point
+     * @param that the other point
+     * @return the value <tt>0</tt> if this point is equal to the argument point (x0
+     *         = x1 and y0 = y1); a negative integer if this point is less than the
+     *         argument point; and a positive integer if this point is greater than
+     *         the argument point
      */
     public int compareTo(Point that) {
-        if ((this.y < that.y) || (this.y == that.y && this.x < that.x)){
+        if ((this.y < that.y) || (this.y == that.y && this.x < that.x)) {
             return -1;
-        }
-        else if (this.y == that.y && this.x == that.x) {
+        } else if (this.y == that.y && this.x == that.x) {
             return 0;
-        }
-        else {
+        } else {
             return -1;
         }
     }
 
     /**
-     * Compares two points by the slope they make with this point.
-     * The slope is defined as in the slopeTo() method.
+     * Compares two points by the slope they make with this point. The slope is
+     * defined as in the slopeTo() method.
      *
      * @return the Comparator that defines this ordering on points
      */
     public Comparator<Point> slopeOrder() {
-        /* YOUR CODE HERE */
+        return new BySlope();
     }
 
-
     /**
-     * Returns a string representation of this point.
-     * This method is provide for debugging;
-     * your program should not rely on the format of the string representation.
+     * Returns a string representation of this point. This method is provide for
+     * debugging; your program should not rely on the format of the string
+     * representation.
      *
      * @return a string representation of this point
      */
@@ -114,5 +110,20 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
+    }
+
+    private static class BySlope implements Comparator<Point> {
+        public int compare(Point p0, Point p1) {
+            double slopeToP0 = this.slopeTo(p0);
+            double slopeToP1 = this.slopeTo(p1);
+
+            if (slopeToP0 > slopeToP1) {
+                return 1;
+            } else if (slopeToP0 < slopeToP1) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
     }
 }
