@@ -12,6 +12,13 @@ public class Point implements Comparable<Point> {
      * @param y the <em>y</em>-coordinate of the point
      */
     public Point(int x, int y) {
+        if (x < 0 || x > 32767) {
+            throw new IllegalArgumentException("x must be between 0 and 32767");
+        }
+        if (y < 0 || y > 32767) {
+            throw new IllegalArgumentException("y must be between 0 and 32767");
+        }
+
         /* DO NOT MODIFY */
         this.x = x;
         this.y = y;
