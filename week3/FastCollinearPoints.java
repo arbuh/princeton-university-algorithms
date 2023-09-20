@@ -45,22 +45,30 @@ public class FastCollinearPoints {
 
         for (int i = 0; i < points.length; i++) {
             Point current = points[i];
-            Arrays.sort(points, current.slopeOrder());
-
+            Point[] pointsBySlope = copyArray(points);
+            Arrays.sort(pointsBySlope, current.slopeOrder());
+            findSegment(current, pointsBySlope);
         }
 
     }
 
-    // This methods works properly only if `points` are sorted by coordinates and the slope with `referencePoint`
-    private findSegment(Point referencePoint, Point[] points){
+    // This methods works properly only if `points` are sorted by coordinates and then by the slope with `referencePoint`
+    private void findSegment(Point referencePoint, Point[] points){
         int nrOfEqualSlopes = 1;
         double referenceSlope;
         Point lastPoint;
 
-        for (Point point: points){
+        for (int i = 0; i < points.length; i++) {
+            Point point = points[i];
             double slope = point.slopeTo(referencePoint);
 
            if (areSlopesEqual(slope, referenceSlope)) {
+                // If the reference point goes after the point, we assume it's a duplicated segment,
+                // because we work with an array sorted by coordinates and thereby the segment must be found before with the reference to the point
+                if (referencePoint.compareTo(point) == 1){
+                    break;
+                }
+
                 lastPoint = point;
                 nrOfEqualSlopes++;
             } else if (nrOfEqualSlopes >= MIN_SEGMENT_LENGTH) {
@@ -69,6 +77,11 @@ public class FastCollinearPoints {
             } else {
                 lastPoint = null;
                 nrOfEqualSlopes = 1;
+            }
+
+            // Add segment if we are in the end of the array and the segment minimal length is fulfilled
+            if (i == points.length - 1 && nrOfEqualSlopes >= MIN_SEGMENT_LENGTH){
+                this.addSegment(new LineSegment(referencePoint, lastPoint));
             }
         }
     }
@@ -88,5 +101,12 @@ public class FastCollinearPoints {
 
         this.numberOfSegments = newNumber;
         this.segments = newSegments;
+    }
+
+    private Point[] copyArray(Point[] arr) {
+        Point[] copy = new Point[arr.length];
+        for (int i = 0; i < arr.length; i++)
+            copy[i] = arr[i];
+        return copy;
     }
 }
