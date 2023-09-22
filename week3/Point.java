@@ -44,27 +44,24 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Returns the slope between this point and the specified point.
-     * Formally, if the two points are (x0, y0) and (x1, y1), then the slope
-     * is (y1 - y0) / (x1 - x0). For completeness, the slope is defined to be
-     * +0.0 if the line segment connecting the two points is horizontal;
-     * Double.POSITIVE_INFINITY if the line segment is vertical;
-     * and Double.NEGATIVE_INFINITY if (x0, y0) and (x1, y1) are equal.
+     * Returns the slope between this point and the specified point. Formally, if
+     * the two points are (x0, y0) and (x1, y1), then the slope is (y1 - y0) / (x1 -
+     * x0). For completeness, the slope is defined to be +0.0 if the line segment
+     * connecting the two points is horizontal; Double.POSITIVE_INFINITY if the line
+     * segment is vertical; and Double.NEGATIVE_INFINITY if (x0, y0) and (x1, y1)
+     * are equal.
      *
-     * @param  that the other point
+     * @param that the other point
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        if (this.y == that.y && this.x == that.x){
+        if (this.y == that.y && this.x == that.x) {
             return Double.NEGATIVE_INFINITY;
-        }
-        else if (this.y == that.y){
+        } else if (this.y == that.y) {
             return +0.0;
-        }
-        else if (this.x == that.x){
+        } else if (this.x == that.x) {
             return Double.POSITIVE_INFINITY;
-        }
-        else {
+        } else {
             return (double) (that.y - this.y) / (double) (that.y - this.x);
         }
     }
