@@ -119,10 +119,10 @@ public class Point implements Comparable<Point> {
         /* YOUR CODE HERE */
     }
 
-    private static class BySlope implements Comparator<Point> {
+    private class BySlope implements Comparator<Point> {
         public int compare(Point p0, Point p1) {
-            double slopeToP0 = this.slopeTo(p0);
-            double slopeToP1 = this.slopeTo(p1);
+            double slopeToP0 = slopeTo(p0);
+            double slopeToP1 = slopeTo(p1);
 
             if (slopeToP0 > slopeToP1) {
                 return 1;

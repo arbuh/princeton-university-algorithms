@@ -31,7 +31,7 @@ public class BruteCollinearPoints {
 
         this.numberOfSegments = 0;
         this.segments = new LineSegment[0];
-        this.segments = bruteforceSegments(points);
+        bruteforceSegments(points);
     }
 
     public int numberOfSegments() {
@@ -42,7 +42,7 @@ public class BruteCollinearPoints {
         return this.segments;
     }
 
-    private LineSegment[] bruteforceSegments(Point[] points) {
+    private void bruteforceSegments(Point[] points) {
 
         for (int i = 0; i < points.length; i++) {
             Point p = points[i];
