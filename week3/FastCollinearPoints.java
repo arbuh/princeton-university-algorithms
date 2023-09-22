@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class FastCollinearPoints {
     private static final double EPSILON = 1E-10;
-    private static final int MIN_POINTS_NR_IN_SEGMENT = 4;
+    private static final int MIN_OTHER_POINTS_IN_SEGMENT = 3;
 
     private int numberOfSegments;
     private LineSegment[] segments;
@@ -62,41 +62,41 @@ public class FastCollinearPoints {
     private void findSegment(Point referencePoint, Point[] points) {
         int nrOfPointsWithEqualSlope = 1;
         boolean isAlreadyFoundSegment = false;
-        double currentSlope = Double.NEGATIVE_INFINITY;
+        double prevSlope = Double.NEGATIVE_INFINITY;
         Point prevPoint = null;
 
         for (int i = 0; i < points.length; i++) {
             Point point = points[i];
             double slope = point.slopeTo(referencePoint);
 
-            if (areSlopesEqual(slope, currentSlope)) {
+            if (areSlopesEqual(slope, prevSlope)) {
                 nrOfPointsWithEqualSlope++;
 
-                // If the point is positioned lower than the reference point,
+                // If the previous point is positioned lower than the reference point,
                 // we assume the segment was already identified in the previous steps,
                 // because we iterate through the points by they positions on the coordinates
                 // grid
-                if (referencePoint.compareTo(point) == 1) {
+                if (referencePoint.compareTo(prevPoint) == 1) {
                     isAlreadyFoundSegment = true;
                 }
             } else {
 
-                if (nrOfPointsWithEqualSlope >= MIN_POINTS_NR_IN_SEGMENT && !isAlreadyFoundSegment) {
+                if (nrOfPointsWithEqualSlope >= MIN_OTHER_POINTS_IN_SEGMENT && !isAlreadyFoundSegment) {
                     this.addSegment(new LineSegment(referencePoint, prevPoint));
                 }
 
                 nrOfPointsWithEqualSlope = 1;
                 isAlreadyFoundSegment = false;
-                currentSlope = slope;
             }
 
             // Add segment if we are in the end of the array
             // and the segment minimal length is fulfilled
-            if (i == points.length - 1 && nrOfPointsWithEqualSlope >= MIN_POINTS_NR_IN_SEGMENT
+            if (i == points.length - 1 && nrOfPointsWithEqualSlope >= MIN_OTHER_POINTS_IN_SEGMENT
                     && !isAlreadyFoundSegment) {
                 this.addSegment(new LineSegment(referencePoint, prevPoint));
             }
 
+            prevSlope = slope;
             prevPoint = point;
         }
     }

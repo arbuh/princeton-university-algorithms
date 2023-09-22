@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import java.util.Arrays;
 
 public class BruteCollinearPoints {
     private static final double EPSILON = 1E-10;
@@ -43,6 +44,7 @@ public class BruteCollinearPoints {
     }
 
     private void bruteforceSegments(Point[] points) {
+        Arrays.sort(points);
 
         for (int i = 0; i < points.length; i++) {
             Point p = points[i];
