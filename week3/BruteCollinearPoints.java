@@ -73,7 +73,8 @@ public class BruteCollinearPoints {
     }
 
     private static boolean areSlopesEqual(double s0, double s1) {
-        return Math.abs(s0 - s1) < EPSILON;
+        // We compare here doubles also with '==' to catch the corner cases such as infinity values
+        return Math.abs(s0 - s1) < EPSILON || s0 == s1;
     }
 
     private void addSegment(LineSegment segment) {
