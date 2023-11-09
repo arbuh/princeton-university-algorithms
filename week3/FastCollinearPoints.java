@@ -10,10 +10,12 @@ public class FastCollinearPoints {
     private int numberOfSegments;
     private LineSegment[] segments;
 
-    public FastCollinearPoints(Point[] points) {
-        if (points == null) {
+    public FastCollinearPoints(Point[] originalPoints) {
+        if (originalPoints == null) {
             throw new IllegalArgumentException("argument to BruteCollinearPoints constructor cannot be null");
         }
+
+        Point[] points = copyArray(originalPoints);
 
         for (int i = 0; i < points.length; i++) {
             Point current = points[i];
@@ -62,7 +64,7 @@ public class FastCollinearPoints {
     private void findSegment(Point referencePoint, Point[] points) {
         int nrOfPointsWithEqualSlope = 1;
         boolean isAlreadyFoundSegment = false;
-        double prevSlope = Double.NEGATIVE_INFINITY;
+        double prevSlope = 0;
         Point prevPoint = null;
 
         for (int i = 0; i < points.length; i++) {
@@ -102,8 +104,13 @@ public class FastCollinearPoints {
     }
 
     private static boolean areSlopesEqual(double s0, double s1) {
-        // We compare here doubles also with '==' to catch the corner cases such as infinity values
-        return Math.abs(s0 - s1) < EPSILON || s0 == s1;
+        // We check here exact identity to catch the corner cases such as infinity values
+        if (Double.compare(s0, s1) == 0){
+            return true;
+        }
+
+        double diff = Math.abs(s0 - s1);
+        return diff < EPSILON * Math.max(Math.abs(s0), Math.abs(s1));
     }
 
     private void addSegment(LineSegment segment) {
