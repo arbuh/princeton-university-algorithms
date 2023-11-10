@@ -63,7 +63,7 @@ public class FastCollinearPoints {
     // This methods works properly only if `points` are sorted by coordinates
     private void findSegment(Point referencePoint, Point[] points) {
         int nrOfPointsWithEqualSlope = 1;
-        boolean isAlreadyFoundSegment = false;
+        boolean isKnownSegment = false;
         double prevSlope = 0;
         Point prevPoint = null;
 
@@ -79,23 +79,23 @@ public class FastCollinearPoints {
                 // because we iterate through the points by they positions on the coordinates
                 // grid
                 if (referencePoint.compareTo(prevPoint) == 1) {
-                    isAlreadyFoundSegment = true;
+                    isKnownSegment = true;
                 }
             } else {
 
-                if (nrOfPointsWithEqualSlope >= MIN_OTHER_POINTS_IN_SEGMENT && !isAlreadyFoundSegment) {
+                if (nrOfPointsWithEqualSlope >= MIN_OTHER_POINTS_IN_SEGMENT && !isKnownSegment) {
                     this.addSegment(new LineSegment(referencePoint, prevPoint));
                 }
 
                 nrOfPointsWithEqualSlope = 1;
-                isAlreadyFoundSegment = false;
+                isKnownSegment = false;
             }
 
             // Add segment if we are in the end of the array
             // and the segment minimal length is fulfilled
             if (i == points.length - 1 && nrOfPointsWithEqualSlope >= MIN_OTHER_POINTS_IN_SEGMENT
-                    && !isAlreadyFoundSegment) {
-                this.addSegment(new LineSegment(referencePoint, prevPoint));
+                    && !isKnownSegment) {
+                this.addSegment(new LineSegment(referencePoint, point));
             }
 
             prevSlope = slope;
