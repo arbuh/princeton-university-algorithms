@@ -1,10 +1,12 @@
 import java.util.Arrays;
 import java.util.Stack;
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
     private int[][] tiles;
     private int[][] positions;
+    private int size;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -20,7 +22,6 @@ public class Board {
         }
 
         initBoardFromTiles(givenTiles);
-        createGoal();
     }
 
     // string representation of this board
@@ -53,7 +54,7 @@ public class Board {
             for (int j = 0; j < tiles[i].length; j++) {
                 tile++;
 
-                if (tiles[i][j] != tile) {
+                if (tiles[i][j] != tile && tile != size) {
                     distance++;
                 }
             }
@@ -70,10 +71,12 @@ public class Board {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
                 tile++;
-                
-                int[] position = positions[tile];
-                int tileDistance = Math.abs(i - position[0]) + Math.abs(j - position[1]);
-                distance =+ tileDistance;
+
+                if (tile != size) {
+                    int[] position = positions[tile];
+                    int tileDistance = Math.abs(i - position[0]) + Math.abs(j - position[1]);
+                    distance = +tileDistance;
+                }
             }
         }
 
@@ -81,28 +84,40 @@ public class Board {
     }
 
     // is this board the goal board?
-    public boolean isGoal(){
-        return areTilesEqual(tiles, goal);
+    public boolean isGoal() {
+        int tile = 0;
+
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                tile++;
+
+                if (tiles[i][j] != tile && tile != size) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     // does this board equal y?
-    public boolean equals(Object obj){
-        if (this == obj){
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (obj == null || getClass() != obj.getClass()){
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
         Board other = (Board) obj;
 
-        if (tiles.length != other.tiles.length){
+        if (tiles.length != other.tiles.length) {
             return false;
         }
 
-        for (int i = 0; i < tiles.length; i++){
-            if (tiles[i].length != other.tiles[i]){
+        for (int i = 0; i < tiles.length; i++) {
+            if (tiles[i].length != other.tiles[i].length) {
                 return false;
             }
         }
@@ -111,14 +126,14 @@ public class Board {
     }
 
     // all neighboring boards
-    public Iterable<Board> neighbors(){
+    public Iterable<Board> neighbors() {
         int y = positions[0][0];
         int x = positions[0][1];
 
-        Stack<Board> neighbors = new Stack();
+        Stack<Board> neighbors = new Stack<Board>();
 
         int up = y - 1;
-        if (up >= 0){
+        if (up >= 0) {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[up][x];
             copy[up][x] = 0;
@@ -126,7 +141,7 @@ public class Board {
         }
 
         int down = y + 1;
-        if (down < tiles.length){
+        if (down < tiles.length) {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[down][x];
             copy[down][x] = 0;
@@ -134,7 +149,7 @@ public class Board {
         }
 
         int left = x - 1;
-        if (left >= 0){
+        if (left >= 0) {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[y][left];
             copy[y][left] = 0;
@@ -142,7 +157,7 @@ public class Board {
         }
 
         int right = x + 1;
-        if (right < tiles[y].length){
+        if (right < tiles[y].length) {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[y][right];
             copy[y][right] = 0;
@@ -153,9 +168,10 @@ public class Board {
     }
 
     // a board that is obtained by exchanging any pair of tiles
-    public Board twin(){
-        int tile1, tile2, y, x;
-        while (tile1 != 0 && tile2 != 0){
+    public Board twin() {
+        int tile1 = 0, tile2 = 0, y = 0, x = 0;
+
+        while (tile1 != 0 && tile2 != 0) {
             y = StdRandom.uniformInt(tiles.length);
             x = StdRandom.uniformInt(tiles[y].length - 1);
             tile1 = tiles[y][x];
@@ -170,28 +186,47 @@ public class Board {
 
     // unit testing (not graded)
     public static void main(String[] args) {
+        int[][] tiles = new int[][] { { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 } };
+        Board board = new Board(tiles);
+        Board goal = new Board(new int[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 0 } });
 
+        StdOut.println("The board:");
+        StdOut.println(board.toString());
+        StdOut.println("Dimension: " + board.dimension());
+        StdOut.println("Hamming distance: " + board.hamming());
+        StdOut.println("Manhattan distance: " + board.manhattan());
+        StdOut.println("Is goal for a board: " + board.isGoal());
+        StdOut.println("Is goal for the goal: " + goal.isGoal());
+        StdOut.println("Is equal with the equal one: " + board.equals(new Board(tiles)));
+        StdOut.println("Is equal with the goal: " + board.equals(goal));
+        StdOut.println("Twin:");
+        StdOut.println(board.twin());
+        StdOut.println("Neighbors:");
+        for (Board neighbor : board.neighbors()) {
+            StdOut.println(neighbor.toString());
+        }
     }
 
     private void initBoardFromTiles(int[][] arr) {
         tiles = new int[arr.length][];
         positions = new int[arr.length * arr.length][];
+        size = arr.length ^ 2;
 
         for (int i = 0; i < arr.length; i++) {
             tiles[i] = new int[arr[i].length];
 
-            for (int j = 0; j < arr[i].length; j++){
+            for (int j = 0; j < arr[i].length; j++) {
                 int tile = arr[i][j];
                 tiles[i][j] = tile;
-                positions[tile] = new int[] {i, j};
+                positions[tile] = new int[] { i, j };
             }
         }
     }
 
-    private static boolean areTilesEqual(int[][] tiles1, int[][] tiles2){
-        for (int i = 0; i < tiles1.length; i++){
-            for (j = 0; j < tiles1[i]; j++){
-                if (tiles1[i][j] != tiles2[i][j]){
+    private static boolean areTilesEqual(int[][] tiles1, int[][] tiles2) {
+        for (int i = 0; i < tiles1.length; i++) {
+            for (int j = 0; j < tiles1[i].length; j++) {
+                if (tiles1[i][j] != tiles2[i][j]) {
                     return false;
                 }
             }
@@ -200,7 +235,7 @@ public class Board {
     }
 
     private int[][] copyArray(int[][] arr) {
-        int[][] newArr  = new int[arr.length][];
+        int[][] newArr = new int[arr.length][];
         for (int i = 0; i < arr.length; i++) {
             newArr[i] = Arrays.copyOf(arr[i], arr[i].length);
         }
