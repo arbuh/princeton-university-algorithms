@@ -11,7 +11,7 @@ public class Board {
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
     public Board(int[][] givenTiles) {
-        if (givenTiles.length < 2 || givenTiles.length <= 128) {
+        if (givenTiles.length < 2 || givenTiles.length >= 128) {
             throw new IllegalArgumentException("The size of the grid must be between 2 and 128");
         }
 
@@ -75,7 +75,7 @@ public class Board {
                 if (tile != size) {
                     int[] position = positions[tile];
                     int tileDistance = Math.abs(i - position[0]) + Math.abs(j - position[1]);
-                    distance = +tileDistance;
+                    distance += tileDistance;
                 }
             }
         }
@@ -171,9 +171,9 @@ public class Board {
     public Board twin() {
         int tile1 = 0, tile2 = 0, y = 0, x = 0;
 
-        while (tile1 != 0 && tile2 != 0) {
+        while (tile1 == 0 || tile2 == 0) {
             y = StdRandom.uniformInt(tiles.length);
-            x = StdRandom.uniformInt(tiles[y].length - 1);
+            x = StdRandom.uniformInt(tiles.length - 1);
             tile1 = tiles[y][x];
             tile2 = tiles[y][x + 1];
         }
@@ -205,12 +205,18 @@ public class Board {
         for (Board neighbor : board.neighbors()) {
             StdOut.println(neighbor.toString());
         }
+
+        StdOut.println("Neighbors of an almost complete board:");
+        Board almostComplete = new Board(new int[][] { { 1, 0, 3 }, { 4, 2, 5 }, { 7, 8, 6 } });
+        for (Board neighbor : almostComplete.neighbors()) {
+            StdOut.println(neighbor.toString());
+        }
     }
 
     private void initBoardFromTiles(int[][] arr) {
         tiles = new int[arr.length][];
         positions = new int[arr.length * arr.length][];
-        size = arr.length ^ 2;
+        size = arr.length * arr.length;
 
         for (int i = 0; i < arr.length; i++) {
             tiles[i] = new int[arr[i].length];
