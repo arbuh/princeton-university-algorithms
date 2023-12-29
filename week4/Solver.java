@@ -26,15 +26,19 @@ public class Solver {
             throw new IllegalArgumentException("Initial board cannot be null");
         }
 
-        prioQueue = new MinPQ<SearchNode>(new ByHamming());
+        Comparator<SearchNode> priorityFunction = new ByHamming();
+
+        prioQueue = new MinPQ<SearchNode>(priorityFunction);
+        prioQueue = new MinPQ<SearchNode>(priorityFunction);
         nrOfMove = 0;
 
-        addToQueue(initial, null);
         solve();
     }
 
     // is the initial board solvable? (see below)
-    public boolean isSolvable()
+    public boolean isSolvable() {
+        return goal != null;
+    }
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
@@ -54,10 +58,10 @@ public class Solver {
         Stack<Board> stack = new Stack<Board>();
 
         SearchNode current = goal;
-        do {
+        while (current != null) {
             stack.push(current.board);
             current = goal.prev;
-        } while (current.prev != null);
+        }
 
         return stack;
     }
@@ -87,31 +91,44 @@ public class Solver {
     }
 
     private void solve(Board initial) {
-        boolean isSolved = false;
+        // We need a twin board to determine if the puzzle can be solved
+        Board twin = initial.twin();
+
+        boolean isMainSolved = false;
+        boolean isTwinSolved = false;
+
+        prioQueue.insert(new SearchNode(initial, nrOfMove, null));
+        twinQueue.insert(new SearchNode(twin, nrOfMove, null));
 
         do {
-            SearchNode searchBoard = prioQueue.min();
+            SearchNode mainSearchBoard = prioQueue.min();
+            SearchNode twinSearchBoard = twinQueue.min();
 
-            isSolved = searchBoard.board.isGoal();
+            isMainSolved = mainSearchBoard.board.isGoal();
+            isTwinSolved = twinSearchBoard.board.isGoal();
 
-            if (!isSolved) {
+            boolean isThereSolution = !(isMainSolved || isTwinSolved);
+
+            if (!isThereSolution) {
                 nrOfMove++;
 
-                for (Board neighbor : searchBoard.board.neighbors()) {
-                    // Eliminate the previous board from the next steps
-                    if (!neighbor.equal(searchBoard.prev)) {
-                        addToQueue(neighbor, searchBoard);
+                for (Board neighbor : mainSearchBoard.board.neighbors()) {
+                    if (!neighbor.equal(mainSearchBoard.prev)) {
+                        prioQueue.insert(new SearchNode(neighbor, nrOfMove, mainSearchBoard));
                     }
                 }
-            } else {
-                goal = searchBoard;
-            }
-        } while (!isSolved);
-    }
 
-    private void addToQueue(Board board, SearchNode prev) {
-        SearchNode node = new SearchNode(board, nrOfMove, prev);
-        prioQueue.insert(node);
+                for (Board neighbor : twinSearchBoard.board.neighbors()) {
+                    if (!neighbor.equal(twinSearchBoard.prev)) {
+                        twinQueue.insert(new SearchNode(neighbor, nrOfMove, twinSearchBoard));
+                    }
+                }
+            }
+
+            if (isMainSolved) {
+                goal = mainSearchBoard;
+            }
+        } while (isThereSolution);
     }
 
     private class ByHamming extends Comparator<SearchNode> {
