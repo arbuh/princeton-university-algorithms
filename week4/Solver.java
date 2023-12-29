@@ -74,16 +74,19 @@ public class Solver {
         boolean isSolved = false;
 
         do {
-            SearchNode minPrioNode = prioQueue.min();
-            solution.push(minPrioNode);
+            SearchNode searchBoard = prioQueue.min();
+            solution.push(searchBoard);
 
-            isSolved = minPrioNode.board.isGoal();
+            isSolved = searchBoard.board.isGoal();
 
             if (!isSolved) {
                 nrOfMove++;
 
-                for (Board neighbor : minPrioNode.board.neighbors()) {
-                    addToQueue(neighbor, minPrioNode);
+                for (Board neighbor : searchBoard.board.neighbors()) {
+                    // Eliminate the previous board from the next steps 
+                    if (!neighbor.equal(searchBoard.prev)){
+                        addToQueue(neighbor, searchBoard);
+                    }
                 }
             }
         } while (!isSolved);
