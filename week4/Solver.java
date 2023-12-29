@@ -1,10 +1,10 @@
 import edu.princeton.cs.algs4.MinPQ;
 import java.util.Comparator;
-import java.util.Stack;
+import edu.princeton.cs.algs4.Queue;
 
 public class Solver {
     private MinPQ<SearchNode> prioQueue;
-    private Stack<Board> solution;
+    private Queue<Board> solution;
     private int nrOfMove;
 
     private class SearchNode {
@@ -26,7 +26,7 @@ public class Solver {
         }
 
         prioQueue = new MinPQ<SearchNode>(new ByHamming());
-        solution = new Stack<SearchNode>();
+        solution = new Queue<SearchNode>();
         nrOfMove = 0;
 
         addToQueue(initial, null);
@@ -75,7 +75,7 @@ public class Solver {
 
         do {
             SearchNode searchBoard = prioQueue.min();
-            solution.push(searchBoard);
+            solution.enqueue(searchBoard);
 
             isSolved = searchBoard.board.isGoal();
 
