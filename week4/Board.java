@@ -1,5 +1,5 @@
 import java.util.Arrays;
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
@@ -139,14 +139,14 @@ public class Board {
         int y = positions[0][0];
         int x = positions[0][1];
 
-        Queue<Board> neighbors = new Queue<Board>();
+        Stack<Board> neighbors = new Stack<Board>();
 
         int up = y - 1;
         if (up >= 0) {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[up][x];
             copy[up][x] = 0;
-            neighbors.enqueue(new Board(copy));
+            neighbors.push(new Board(copy));
         }
 
         int down = y + 1;
@@ -154,7 +154,7 @@ public class Board {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[down][x];
             copy[down][x] = 0;
-            neighbors.enqueue(new Board(copy));
+            neighbors.push(new Board(copy));
         }
 
         int left = x - 1;
@@ -162,7 +162,7 @@ public class Board {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[y][left];
             copy[y][left] = 0;
-            neighbors.enqueue(new Board(copy));
+            neighbors.push(new Board(copy));
         }
 
         int right = x + 1;
@@ -170,7 +170,7 @@ public class Board {
             int[][] copy = copyArray(tiles);
             copy[y][x] = copy[y][right];
             copy[y][right] = 0;
-            neighbors.enqueue(new Board(copy));
+            neighbors.push(new Board(copy));
         }
 
         return neighbors;

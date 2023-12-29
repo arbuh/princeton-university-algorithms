@@ -1,10 +1,11 @@
 import edu.princeton.cs.algs4.MinPQ;
 import java.util.Comparator;
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
     private MinPQ<SearchNode> prioQueue;
-    private Queue<Board> solution;
+    private MinPQ<SearchNode> twinQueue;
+    private SearchNode goal;
     private int nrOfMove;
 
     private class SearchNode {
@@ -26,7 +27,6 @@ public class Solver {
         }
 
         prioQueue = new MinPQ<SearchNode>(new ByHamming());
-        solution = new Queue<SearchNode>();
         nrOfMove = 0;
 
         addToQueue(initial, null);
@@ -38,12 +38,28 @@ public class Solver {
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
+        if (!isSolvable()) {
+            return -1;
+        }
+
         return nrOfMove;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
-        return solution;
+        if (!isSolvable()) {
+            return null;
+        }
+
+        Stack<Board> stack = new Stack<Board>();
+
+        SearchNode current = goal;
+        do {
+            stack.push(current.board);
+            current = goal.prev;
+        } while (current.prev != null);
+
+        return stack;
     }
 
     // test client (see below)
@@ -75,7 +91,6 @@ public class Solver {
 
         do {
             SearchNode searchBoard = prioQueue.min();
-            solution.enqueue(searchBoard);
 
             isSolved = searchBoard.board.isGoal();
 
@@ -83,11 +98,13 @@ public class Solver {
                 nrOfMove++;
 
                 for (Board neighbor : searchBoard.board.neighbors()) {
-                    // Eliminate the previous board from the next steps 
-                    if (!neighbor.equal(searchBoard.prev)){
+                    // Eliminate the previous board from the next steps
+                    if (!neighbor.equal(searchBoard.prev)) {
                         addToQueue(neighbor, searchBoard);
                     }
                 }
+            } else {
+                goal = searchBoard;
             }
         } while (!isSolved);
     }
