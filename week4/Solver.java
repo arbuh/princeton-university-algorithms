@@ -5,10 +5,11 @@ import java.util.Comparator;
 import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
-    private MinPQ<SearchNode> prioQueue;
-    private MinPQ<SearchNode> twinQueue;
+    private Comparator<SearchNode> priorityFunction = new ByManhattan();
+    private MinPQ<SearchNode> prioQueue = new MinPQ<SearchNode>(priorityFunction);
+    private MinPQ<SearchNode> twinQueue = new MinPQ<SearchNode>(priorityFunction);
     private SearchNode goal;
-    private int nrOfMove;
+    private int nrOfMove = 0;
 
     private class SearchNode {
         private Board board;
@@ -27,12 +28,6 @@ public class Solver {
         if (initial == null) {
             throw new IllegalArgumentException("Initial board cannot be null");
         }
-
-        Comparator<SearchNode> priorityFunction = new ByHamming();
-
-        prioQueue = new MinPQ<SearchNode>(priorityFunction);
-        twinQueue = new MinPQ<SearchNode>(priorityFunction);
-        nrOfMove = 0;
 
         solve(initial);
     }
@@ -116,13 +111,13 @@ public class Solver {
                 nrOfMove++;
 
                 for (Board neighbor : mainSearchBoard.board.neighbors()) {
-                    if (!neighbor.equals(mainSearchBoard.prev)) {
+                    if (mainSearchBoard.prev == null || !neighbor.equals(mainSearchBoard.prev.board)) {
                         prioQueue.insert(new SearchNode(neighbor, nrOfMove, mainSearchBoard));
                     }
                 }
 
                 for (Board neighbor : twinSearchBoard.board.neighbors()) {
-                    if (!neighbor.equals(twinSearchBoard.prev)) {
+                    if (mainSearchBoard.prev == null || !neighbor.equals(twinSearchBoard.prev.board)) {
                         twinQueue.insert(new SearchNode(neighbor, nrOfMove, twinSearchBoard));
                     }
                 }

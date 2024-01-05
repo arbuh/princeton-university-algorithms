@@ -136,40 +136,40 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        int y = positions[0][0];
-        int x = positions[0][1];
+        int row = positions[0][0];
+        int column = positions[0][1];
 
         Stack<Board> neighbors = new Stack<Board>();
 
-        int up = y - 1;
+        int up = row - 1;
         if (up >= 0) {
             int[][] copy = copyArray(tiles);
-            copy[y][x] = copy[up][x];
-            copy[up][x] = 0;
+            copy[row][column] = copy[up][column];
+            copy[up][column] = 0;
             neighbors.push(new Board(copy));
         }
 
-        int down = y + 1;
+        int down = row + 1;
         if (down < tiles.length) {
             int[][] copy = copyArray(tiles);
-            copy[y][x] = copy[down][x];
-            copy[down][x] = 0;
+            copy[row][column] = copy[down][column];
+            copy[down][column] = 0;
             neighbors.push(new Board(copy));
         }
 
-        int left = x - 1;
+        int left = column - 1;
         if (left >= 0) {
             int[][] copy = copyArray(tiles);
-            copy[y][x] = copy[y][left];
-            copy[y][left] = 0;
+            copy[row][column] = copy[row][left];
+            copy[row][left] = 0;
             neighbors.push(new Board(copy));
         }
 
-        int right = x + 1;
-        if (right < tiles[y].length) {
+        int right = column + 1;
+        if (right < tiles[row].length) {
             int[][] copy = copyArray(tiles);
-            copy[y][x] = copy[y][right];
-            copy[y][right] = 0;
+            copy[row][column] = copy[row][right];
+            copy[row][right] = 0;
             neighbors.push(new Board(copy));
         }
 
@@ -178,18 +178,18 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int tile1 = 0, tile2 = 0, y = 0, x = 0;
+        int tile1 = 0, tile2 = 0, column = 0, row = 0;
 
         while (tile1 == 0 || tile2 == 0) {
-            y = StdRandom.uniformInt(tiles.length);
-            x = StdRandom.uniformInt(tiles.length - 1);
-            tile1 = tiles[y][x];
-            tile2 = tiles[y][x + 1];
+            row = StdRandom.uniformInt(tiles.length);
+            column = StdRandom.uniformInt(tiles.length - 1);
+            tile1 = tiles[row][column];
+            tile2 = tiles[row][column + 1];
         }
 
         int[][] copy = copyArray(tiles);
-        copy[y][x] = tile2;
-        copy[y][x + 1] = tile1;
+        copy[row][column] = tile2;
+        copy[row][column + 1] = tile1;
         return new Board(copy);
     }
 
