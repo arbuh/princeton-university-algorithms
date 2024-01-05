@@ -31,7 +31,7 @@ public class Solver {
         Comparator<SearchNode> priorityFunction = new ByHamming();
 
         prioQueue = new MinPQ<SearchNode>(priorityFunction);
-        prioQueue = new MinPQ<SearchNode>(priorityFunction);
+        twinQueue = new MinPQ<SearchNode>(priorityFunction);
         nrOfMove = 0;
 
         solve(initial);
@@ -62,7 +62,7 @@ public class Solver {
         SearchNode current = goal;
         while (current != null) {
             stack.push(current.board);
-            current = goal.prev;
+            current = current.prev;
         }
 
         return stack;
@@ -104,13 +104,13 @@ public class Solver {
         twinQueue.insert(new SearchNode(twin, nrOfMove, null));
 
         do {
-            SearchNode mainSearchBoard = prioQueue.min();
-            SearchNode twinSearchBoard = twinQueue.min();
+            SearchNode mainSearchBoard = prioQueue.delMin();
+            SearchNode twinSearchBoard = twinQueue.delMin();
 
             isMainSolved = mainSearchBoard.board.isGoal();
             isTwinSolved = twinSearchBoard.board.isGoal();
 
-            isThereSolution = !(isMainSolved || isTwinSolved);
+            isThereSolution = isMainSolved || isTwinSolved;
 
             if (!isThereSolution) {
                 nrOfMove++;
