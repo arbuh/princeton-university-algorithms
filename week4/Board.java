@@ -52,15 +52,16 @@ public final class Board {
     // number of tiles out of place
     public int hamming() {
         if (hamming == -1) {
-            int tile = 0;
+            hamming = 0;
+            int tile = 1;
 
             for (int i = 0; i < tiles.length; i++) {
                 for (int j = 0; j < tiles[i].length; j++) {
-                    tile++;
-
                     if (tiles[i][j] != tile && tile != size) {
                         hamming++;
                     }
+
+                    tile++;
                 }
             }
         }
@@ -71,6 +72,7 @@ public final class Board {
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
         if (manhattan == -1) {
+            manhattan = 0;
             int tile = 0;
 
             for (int i = 0; i < tiles.length; i++) {
