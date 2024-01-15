@@ -7,6 +7,8 @@ public final class Board {
     private int[][] positions;
     private int size;
 
+    private Board twin = null;
+
     private int hamming = -1;
     private int manhattan = -1;
 
@@ -173,19 +175,24 @@ public final class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        int tile1 = 0, tile2 = 0, column = 0, row = 0;
+        if (twin == null) {
+            int tile1 = 0, tile2 = 0, column = 0, row = 0;
 
-        while (tile1 == 0 || tile2 == 0) {
-            row = StdRandom.uniformInt(tiles.length);
-            column = StdRandom.uniformInt(tiles.length - 1);
-            tile1 = tiles[row][column];
-            tile2 = tiles[row][column + 1];
+            while (tile1 == 0 || tile2 == 0) {
+                row = StdRandom.uniformInt(tiles.length);
+                column = StdRandom.uniformInt(tiles.length - 1);
+                tile1 = tiles[row][column];
+                tile2 = tiles[row][column + 1];
+            }
+
+            int[][] copy = copyArray(tiles);
+            copy[row][column] = tile2;
+            copy[row][column + 1] = tile1;
+
+            twin = new Board(copy);
         }
 
-        int[][] copy = copyArray(tiles);
-        copy[row][column] = tile2;
-        copy[row][column + 1] = tile1;
-        return new Board(copy);
+        return twin;
     }
 
     // unit testing (not graded)
