@@ -1,15 +1,14 @@
-import java.util.Arrays;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
-public class Board {
+public final class Board {
     private int[][] tiles;
     private int[][] positions;
     private int size;
 
-    private int hamming;
-    private int manhattan;
+    private int hamming = -1;
+    private int manhattan = -1;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -25,8 +24,6 @@ public class Board {
         }
 
         initBoardFromTiles(givenTiles);
-        computeHamming();
-        computeManhattan();
     }
 
     // string representation of this board
@@ -52,44 +49,42 @@ public class Board {
 
     // number of tiles out of place
     public int hamming() {
-        return hamming;
-    }
+        if (hamming == -1) {
+            int tile = 0;
 
-    private void computeHamming() {
-        hamming = 0;
-        int tile = 0;
+            for (int i = 0; i < tiles.length; i++) {
+                for (int j = 0; j < tiles[i].length; j++) {
+                    tile++;
 
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
-                tile++;
-
-                if (tiles[i][j] != tile && tile != size) {
-                    hamming++;
+                    if (tiles[i][j] != tile && tile != size) {
+                        hamming++;
+                    }
                 }
             }
         }
+
+        return hamming;
     }
 
     // sum of Manhattan distances between tiles and goal
     public int manhattan() {
-        return manhattan;
-    }
+        if (manhattan == -1) {
+            int tile = 0;
 
-    private void computeManhattan() {
-        manhattan = 0;
-        int tile = 0;
+            for (int i = 0; i < tiles.length; i++) {
+                for (int j = 0; j < tiles[i].length; j++) {
+                    tile++;
 
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
-                tile++;
-
-                if (tile != size) {
-                    int[] position = positions[tile];
-                    int tileDistance = Math.abs(i - position[0]) + Math.abs(j - position[1]);
-                    manhattan += tileDistance;
+                    if (tile != size) {
+                        int[] position = positions[tile];
+                        int tileDistance = Math.abs(i - position[0]) + Math.abs(j - position[1]);
+                        manhattan += tileDistance;
+                    }
                 }
             }
         }
+
+        return manhattan;
     }
 
     // is this board the goal board?
@@ -228,11 +223,10 @@ public class Board {
         size = arr.length * arr.length;
 
         for (int i = 0; i < arr.length; i++) {
-            tiles[i] = new int[arr[i].length];
+            tiles[i] = arr[i].clone();
 
             for (int j = 0; j < arr[i].length; j++) {
-                int tile = arr[i][j];
-                tiles[i][j] = tile;
+                int tile = tiles[i][j];
                 positions[tile] = new int[] { i, j };
             }
         }
@@ -249,10 +243,10 @@ public class Board {
         return true;
     }
 
-    private int[][] copyArray(int[][] arr) {
+    private static int[][] copyArray(int[][] arr) {
         int[][] newArr = new int[arr.length][];
         for (int i = 0; i < arr.length; i++) {
-            newArr[i] = Arrays.copyOf(arr[i], arr[i].length);
+            newArr[i] = arr[i].clone();
         }
         return newArr;
     }

@@ -5,11 +5,7 @@ import java.util.Comparator;
 import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
-    private Comparator<SearchNode> priorityFunction = new ByManhattan();
-    private MinPQ<SearchNode> prioQueue = new MinPQ<SearchNode>(priorityFunction);
-    private MinPQ<SearchNode> twinQueue = new MinPQ<SearchNode>(priorityFunction);
     private SearchNode goal;
-    private int nrOfMove = 0;
 
     private class SearchNode {
         private Board board;
@@ -43,7 +39,7 @@ public class Solver {
             return -1;
         }
 
-        return nrOfMove;
+        return goal.nrOfMove;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
@@ -88,12 +84,18 @@ public class Solver {
     }
 
     private void solve(Board initial) {
+        Comparator<SearchNode> priorityFunction = new ByManhattan();
+        MinPQ<SearchNode> prioQueue = new MinPQ<SearchNode>(priorityFunction);
+        MinPQ<SearchNode> twinQueue = new MinPQ<SearchNode>(priorityFunction);
+
         // We need a twin board to determine if the puzzle can be solved
         Board twin = initial.twin();
 
         boolean isMainSolved = false;
         boolean isTwinSolved = false;
         boolean isThereSolution = false;
+
+        int nrOfMove = 0;
 
         prioQueue.insert(new SearchNode(initial, nrOfMove, null));
         twinQueue.insert(new SearchNode(twin, nrOfMove, null));
@@ -129,13 +131,13 @@ public class Solver {
         } while (!isThereSolution);
     }
 
-    private class ByHamming implements Comparator<SearchNode> {
-        public int compare(SearchNode node1, SearchNode node2) {
-            double prio1 = node1.board.hamming() + node1.nrOfMove;
-            double prio2 = node2.board.hamming() + node2.nrOfMove;
-            return comparePriorities(prio1, prio2);
-        }
-    }
+    // private class ByHamming implements Comparator<SearchNode> {
+    // public int compare(SearchNode node1, SearchNode node2) {
+    // double prio1 = node1.board.hamming() + node1.nrOfMove;
+    // double prio2 = node2.board.hamming() + node2.nrOfMove;
+    // return comparePriorities(prio1, prio2);
+    // }
+    // }
 
     private class ByManhattan implements Comparator<SearchNode> {
         public int compare(SearchNode node1, SearchNode node2) {
