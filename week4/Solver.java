@@ -5,7 +5,8 @@ import java.util.Comparator;
 import edu.princeton.cs.algs4.Stack;
 
 public class Solver {
-    private SearchNode goal;
+    private SearchNode solutionNode;
+    private Iterable<Board> solution;
 
     private class SearchNode {
         private Board board;
@@ -30,7 +31,7 @@ public class Solver {
 
     // is the initial board solvable? (see below)
     public boolean isSolvable() {
-        return goal != null;
+        return solutionNode != null;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
@@ -39,24 +40,12 @@ public class Solver {
             return -1;
         }
 
-        return goal.nrOfMove;
+        return solutionNode.nrOfMove;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
-        if (!isSolvable()) {
-            return null;
-        }
-
-        Stack<Board> stack = new Stack<Board>();
-
-        SearchNode current = goal;
-        while (current != null) {
-            stack.push(current.board);
-            current = current.prev;
-        }
-
-        return stack;
+        return solution;
     }
 
     // test client (see below)
@@ -95,10 +84,8 @@ public class Solver {
         boolean isTwinSolved = false;
         boolean isThereSolution = false;
 
-        int nrOfMove = 0;
-
-        prioQueue.insert(new SearchNode(initial, nrOfMove, null));
-        twinQueue.insert(new SearchNode(twin, nrOfMove, null));
+        prioQueue.insert(new SearchNode(initial, 0, null));
+        twinQueue.insert(new SearchNode(twin, 0, null));
 
         do {
             SearchNode mainSearchBoard = prioQueue.delMin();
@@ -110,34 +97,25 @@ public class Solver {
             isThereSolution = isMainSolved || isTwinSolved;
 
             if (!isThereSolution) {
-                nrOfMove++;
-
                 for (Board neighbor : mainSearchBoard.board.neighbors()) {
                     if (mainSearchBoard.prev == null || !neighbor.equals(mainSearchBoard.prev.board)) {
-                        prioQueue.insert(new SearchNode(neighbor, nrOfMove, mainSearchBoard));
+                        prioQueue.insert(new SearchNode(neighbor, mainSearchBoard.nrOfMove + 1, mainSearchBoard));
                     }
                 }
 
                 for (Board neighbor : twinSearchBoard.board.neighbors()) {
                     if (mainSearchBoard.prev == null || !neighbor.equals(twinSearchBoard.prev.board)) {
-                        twinQueue.insert(new SearchNode(neighbor, nrOfMove, twinSearchBoard));
+                        twinQueue.insert(new SearchNode(neighbor, mainSearchBoard.nrOfMove + 1, twinSearchBoard));
                     }
                 }
             }
 
             if (isMainSolved) {
-                goal = mainSearchBoard;
+                solutionNode = mainSearchBoard;
+                solution = calcSolution(mainSearchBoard);
             }
         } while (!isThereSolution);
     }
-
-    // private class ByHamming implements Comparator<SearchNode> {
-    // public int compare(SearchNode node1, SearchNode node2) {
-    // double prio1 = node1.board.hamming() + node1.nrOfMove;
-    // double prio2 = node2.board.hamming() + node2.nrOfMove;
-    // return comparePriorities(prio1, prio2);
-    // }
-    // }
 
     private class ByManhattan implements Comparator<SearchNode> {
         public int compare(SearchNode node1, SearchNode node2) {
@@ -147,7 +125,7 @@ public class Solver {
         }
     }
 
-    private int comparePriorities(double distance1, double distance2) {
+    private static int comparePriorities(double distance1, double distance2) {
         if (distance1 > distance2) {
             return 1;
         } else if (distance1 < distance2) {
@@ -155,5 +133,17 @@ public class Solver {
         } else {
             return 0;
         }
+    }
+
+    private static Iterable<Board> calcSolution(SearchNode solutionNode) {
+        Stack<Board> stack = new Stack<Board>();
+
+        SearchNode current = solutionNode;
+        while (current != null) {
+            stack.push(current.board);
+            current = current.prev;
+        }
+
+        return stack;
     }
 }
