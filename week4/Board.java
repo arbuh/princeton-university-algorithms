@@ -127,7 +127,7 @@ public final class Board {
         }
     }
 
-    public static String tilesToString(int[][] tiles) {
+    private static String tilesToString(int[][] tiles) {
         StringBuilder str = new StringBuilder();
 
         str.append(tiles.length);
