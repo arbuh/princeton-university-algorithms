@@ -88,7 +88,35 @@ public class KdTree {
         if (point == null) {
             throw new IllegalArgumentException();
         }
+
         return false;
+    }
+
+    private boolean containsRec(Point2D point, Node node) {
+        if (node == null) {
+            return false;
+        }
+
+        if (node.value.equals(point)) {
+            return true;
+        }
+
+        double coordPoint, coordNode;
+        if (node.alignment == Alignment.VERTICAL) {
+            coordPoint = point.x();
+            coordNode = node.value.x();
+        }
+        else {
+            coordPoint = point.y();
+            coordNode = node.value.y();
+        }
+
+        if (coordPoint < coordNode) {
+            return containsRec(point, node.left);
+        }
+        else {
+            return containsRec(point, node.right);
+        }
     }
 
     public void draw() {
