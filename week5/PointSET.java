@@ -60,19 +60,18 @@ public class PointSET {
             throw new IllegalArgumentException();
         }
 
-        if (this.set.isEmpty()) {
-            return null;
+        double minDistance = Double.MAX_VALUE;
+        Point2D nearest = null;
+
+        for (Point2D other : this.set) {
+            double distance = point.distanceTo(other);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearest = other;
+            }
         }
 
-        Point2D floor = this.set.floor(point);
-        Point2D ceiling = this.set.ceiling(point);
-
-        if (point.distanceTo(floor) < point.distanceTo(ceiling)) {
-            return floor;
-        }
-        else {
-            return ceiling;
-        }
+        return nearest;
     }
 
     public static void main(String[] args) {
