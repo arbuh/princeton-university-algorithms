@@ -53,21 +53,21 @@ public class KdTree {
     }
 
     private void insertRec(Point2D point, Node node) {
-        double coordPoint, coordNode;
+        double pointCoord, nodeCoord;
         Alignment nextAlighment;
 
         if (node.alignment == Alignment.VERTICAL) {
-            coordPoint = point.x();
-            coordNode = node.value.x();
+            pointCoord = point.x();
+            nodeCoord = node.value.x();
             nextAlighment = Alignment.HORIZONTAL;
         }
         else {
-            coordPoint = point.y();
-            coordNode = node.value.y();
+            pointCoord = point.y();
+            nodeCoord = node.value.y();
             nextAlighment = Alignment.VERTICAL;
         }
 
-        if (coordPoint < coordNode) {
+        if (pointCoord < nodeCoord) {
             if (node.left == null) {
                 node.left = new Node(point, nextAlighment);
             }
@@ -102,17 +102,17 @@ public class KdTree {
             return true;
         }
 
-        double coordPoint, coordNode;
+        double pointCoord, nodeCoord;
         if (node.alignment == Alignment.VERTICAL) {
-            coordPoint = point.x();
-            coordNode = node.value.x();
+            pointCoord = point.x();
+            nodeCoord = node.value.x();
         }
         else {
-            coordPoint = point.y();
-            coordNode = node.value.y();
+            pointCoord = point.y();
+            nodeCoord = node.value.y();
         }
 
-        if (coordPoint < coordNode) {
+        if (pointCoord < nodeCoord) {
             return containsRec(point, node.left);
         }
         else {
@@ -182,12 +182,70 @@ public class KdTree {
         return list;
     }
 
-    // TODO
     public Point2D nearest(Point2D point) {
         if (point == null) {
             throw new IllegalArgumentException();
         }
-        return null;
+        return nearestRec(point, this.root);
+    }
+
+    private Point2D nearestRec(Point2D point, Node node) {
+        if (node == null) {
+            return null;
+        }
+
+        Point2D result = node.value;
+        double distance = point.distanceTo(node.value);
+
+        // We choose coordinates to check based on the node's alignment
+        double pointCoord, nodeCoord;
+        if (node.alignment == Alignment.VERTICAL) {
+            pointCoord = point.x();
+            nodeCoord = node.value.x();
+        }
+        else {
+            pointCoord = point.y();
+            nodeCoord = node.value.y();
+        }
+
+        // We decide where to go first based on the proximity of sub-planes to the target point
+        Node first = null;
+        Node second = null;
+        if (pointCoord < nodeCoord) {
+            first = node.left;
+            second = node.right;
+        }
+        else {
+            first = node.right;
+            second = node.left;
+        }
+
+        // We obtain a candidate from the first checked plane
+        Point2D firstSubtreeResult = nearestRec(point, first);
+        double firstSubtreeDistance = point.distanceTo(firstSubtreeResult);
+
+        // We update the result if the point from the first checked subtree is closer to the target point
+        if (firstSubtreeDistance < distance) {
+            result = firstSubtreeResult;
+            distance = firstSubtreeDistance;
+        }
+
+        // We decide if we can stop here without checking the second plane
+        double distanceToPlane = Math.abs(pointCoord - nodeCoord);
+        if (distanceToPlane > distance) {
+            return result;
+        }
+
+        // Continue, if there could be a closer point in the second plane
+        Point2D secondSubtreeResult = nearestRec(point, second);
+        double secondSubtreeDistance = point.distanceTo(secondSubtreeResult);
+
+        // Update the result if the point from the second subtree is closer to the target point
+        if (secondSubtreeDistance < distance) {
+            result = secondSubtreeResult;
+        }
+
+        return result;
     }
 
     public static void main(String[] args) {
