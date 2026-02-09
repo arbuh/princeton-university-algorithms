@@ -60,11 +60,11 @@ public class PointSET {
             throw new IllegalArgumentException();
         }
 
-        double minDistance = Double.MAX_VALUE;
+        double minDistance = Double.POSITIVE_INFINITY;
         Point2D nearest = null;
 
         for (Point2D other : this.set) {
-            double distance = point.distanceTo(other);
+            double distance = point.distanceSquaredTo(other);
             if (distance < minDistance) {
                 minDistance = distance;
                 nearest = other;

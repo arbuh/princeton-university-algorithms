@@ -36,7 +36,7 @@ public class KdTree {
     }
 
     public int size() {
-        return 0;
+        return this.size;
     }
 
     public void insert(Point2D point) {
@@ -195,7 +195,7 @@ public class KdTree {
         }
 
         Point2D result = node.value;
-        double distance = point.distanceTo(node.value);
+        double distance = point.distanceSquaredTo(node.value);
 
         // We choose coordinates to check based on the node's alignment
         double pointCoord, nodeCoord;
@@ -225,7 +225,7 @@ public class KdTree {
 
         // We update the result if the point from the first checked subtree is closer to the target point
         if (firstSubtreeResult != null) {
-            double firstSubtreeDistance = point.distanceTo(firstSubtreeResult);
+            double firstSubtreeDistance = point.distanceSquaredTo(firstSubtreeResult);
             if (firstSubtreeDistance < distance) {
                 result = firstSubtreeResult;
                 distance = firstSubtreeDistance;
@@ -243,7 +243,7 @@ public class KdTree {
 
         // Update the result if the point from the second subtree is closer to the target point
         if (secondSubtreeResult != null) {
-            double secondSubtreeDistance = point.distanceTo(secondSubtreeResult);
+            double secondSubtreeDistance = point.distanceSquaredTo(secondSubtreeResult);
             if (secondSubtreeDistance < distance) {
                 result = secondSubtreeResult;
             }
