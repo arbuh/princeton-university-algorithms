@@ -222,12 +222,14 @@ public class KdTree {
 
         // We obtain a candidate from the first checked plane
         Point2D firstSubtreeResult = nearestRec(point, first);
-        double firstSubtreeDistance = point.distanceTo(firstSubtreeResult);
 
         // We update the result if the point from the first checked subtree is closer to the target point
-        if (firstSubtreeDistance < distance) {
-            result = firstSubtreeResult;
-            distance = firstSubtreeDistance;
+        if (firstSubtreeResult != null) {
+            double firstSubtreeDistance = point.distanceTo(firstSubtreeResult);
+            if (firstSubtreeDistance < distance) {
+                result = firstSubtreeResult;
+                distance = firstSubtreeDistance;
+            }
         }
 
         // We decide if we can stop here without checking the second plane
@@ -238,11 +240,13 @@ public class KdTree {
 
         // Continue, if there could be a closer point in the second plane
         Point2D secondSubtreeResult = nearestRec(point, second);
-        double secondSubtreeDistance = point.distanceTo(secondSubtreeResult);
 
         // Update the result if the point from the second subtree is closer to the target point
-        if (secondSubtreeDistance < distance) {
-            result = secondSubtreeResult;
+        if (secondSubtreeResult != null) {
+            double secondSubtreeDistance = point.distanceTo(secondSubtreeResult);
+            if (secondSubtreeDistance < distance) {
+                result = secondSubtreeResult;
+            }
         }
 
         return result;
