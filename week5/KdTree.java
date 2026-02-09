@@ -3,6 +3,8 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class KdTree {
     private Node root;
@@ -153,10 +155,10 @@ public class KdTree {
     }
 
     private ArrayList<Point2D> rangeRec(RectHV rect, Node node) {
-        ArrayList<Point2D> list = new ArrayList<>();
+        Set<Point2D> list = new HashSet<>();
 
         if (node == null) {
-            return list;
+            return new ArrayList<>();
         }
 
         if (rect.contains(node.value)) {
@@ -187,11 +189,11 @@ public class KdTree {
         else {
             points = rangeRec(rect, node.left);
             list.addAll(points);
-            points = rangeRec(rect, node.left);
+            points = rangeRec(rect, node.right);
             list.addAll(points);
         }
 
-        return list;
+        return new ArrayList<>(list);
     }
 
     public Point2D nearest(Point2D point) {
