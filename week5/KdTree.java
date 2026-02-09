@@ -175,19 +175,20 @@ public class KdTree {
             nodeCoord = node.value.y();
         }
 
-        if (rectMin < nodeCoord && rectMax > nodeCoord) {
-            ArrayList<Point2D> left = rangeRec(rect, node.left);
-            list.addAll(left);
-            ArrayList<Point2D> right = rangeRec(rect, node.right);
-            list.addAll(right);
+        ArrayList<Point2D> points;
+        if (nodeCoord > rectMax) {
+            points = rangeRec(rect, node.left);
+            list.addAll(points);
         }
-        else if (rectMax < nodeCoord) {
-            ArrayList<Point2D> left = rangeRec(rect, node.left);
-            list.addAll(left);
+        else if (nodeCoord < rectMin) {
+            points = rangeRec(rect, node.right);
+            list.addAll(points);
         }
         else {
-            ArrayList<Point2D> right = rangeRec(rect, node.right);
-            list.addAll(right);
+            points = rangeRec(rect, node.left);
+            list.addAll(points);
+            points = rangeRec(rect, node.left);
+            list.addAll(points);
         }
 
         return list;
