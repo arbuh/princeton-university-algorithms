@@ -42,11 +42,15 @@ public class KdTree {
             throw new IllegalArgumentException();
         }
 
+        boolean inserted;
         if (this.root == null) {
             this.root = new Node(point, Alignment.VERTICAL);
+            inserted = true;
+        }
+        else {
+            inserted = insertRec(point, this.root);
         }
 
-        boolean inserted = insertRec(point, this.root);
         if (inserted) {
             this.size++;
         }
