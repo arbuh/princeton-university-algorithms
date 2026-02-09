@@ -53,7 +53,7 @@ public class KdTree {
     }
 
     private boolean insertRec(Point2D point, Node node) {
-        // Do not insert duplicated points
+        // We skip duplicated points
         if (point.equals(node.value)) {
             return false;
         }
