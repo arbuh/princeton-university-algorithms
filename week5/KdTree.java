@@ -22,8 +22,6 @@ public class KdTree {
 
         Node left;
         Node right;
-        // TODO: remove if no use
-        Node parent;
 
         Node(Point2D point, Alignment alignment) {
             this.value = point;
@@ -48,11 +46,18 @@ public class KdTree {
             this.root = new Node(point, Alignment.VERTICAL);
         }
 
-        insertRec(point, this.root);
-        this.size++;
+        boolean inserted = insertRec(point, this.root);
+        if (inserted) {
+            this.size++;
+        }
     }
 
-    private void insertRec(Point2D point, Node node) {
+    private boolean insertRec(Point2D point, Node node) {
+        // Do not insert duplicated points
+        if (point.equals(node.value)) {
+            return false;
+        }
+
         double pointCoord, nodeCoord;
         Alignment nextAlighment;
 
@@ -70,17 +75,19 @@ public class KdTree {
         if (pointCoord < nodeCoord) {
             if (node.left == null) {
                 node.left = new Node(point, nextAlighment);
+                return true;
             }
             else {
-                insertRec(point, node.left);
+                return insertRec(point, node.left);
             }
         }
         else {
             if (node.right == null) {
                 node.right = new Node(point, nextAlighment);
+                return true;
             }
             else {
-                insertRec(point, node.right);
+                return insertRec(point, node.right);
             }
         }
     }
