@@ -3,8 +3,6 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class KdTree {
     private Node root;
@@ -155,7 +153,7 @@ public class KdTree {
     }
 
     private ArrayList<Point2D> rangeRec(RectHV rect, Node node) {
-        Set<Point2D> list = new HashSet<>();
+        ArrayList<Point2D> list = new ArrayList<>();
 
         if (node == null) {
             return new ArrayList<>();
