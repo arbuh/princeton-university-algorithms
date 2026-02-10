@@ -245,8 +245,8 @@ public class KdTree {
         }
 
         // We decide if we can stop here without checking the second plane
-        double distanceToPlane = Math.abs(pointCoord - nodeCoord);
-        if (distanceToPlane > distance) {
+        double distanceToPlaneSquared = (pointCoord - nodeCoord) * (pointCoord - nodeCoord);
+        if (distanceToPlaneSquared > distance) {
             return result;
         }
 
